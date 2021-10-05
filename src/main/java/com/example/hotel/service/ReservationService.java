@@ -6,11 +6,13 @@ import com.example.hotel.entities.ReservationEntity;
 import com.example.hotel.repositories.ClientRepository;
 import com.example.hotel.repositories.HotelRepository;
 import com.example.hotel.repositories.ReservationRepository;
+import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
+@Service
 public class ReservationService {
     private final ReservationRepository rr;
 
@@ -50,7 +52,7 @@ public class ReservationService {
         }
     }
 
-    public ReservationEntity addReservation(int id, String dateDebut, String dateFin, int numeroChambre, int client, int hotel) {
+    public ReservationEntity updateReservation(int id, String dateDebut, String dateFin, int numeroChambre, int client, int hotel) {
         SimpleDateFormat formatterDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
 
         try {

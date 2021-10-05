@@ -3,7 +3,6 @@ package com.example.hotel.service;
 import com.example.hotel.entities.AdminEntity;
 import com.example.hotel.repositories.AdminRepository;
 import org.springframework.stereotype.Service;
-import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.List;
 
