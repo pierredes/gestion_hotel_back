@@ -11,6 +11,7 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping("/ws/client")
@@ -18,6 +19,11 @@ public class ClientApiController {
 
     @Autowired
     ClientService cs;
+
+    public static boolean isEmailValid(String email) {
+        final Pattern EMAIL_REGEX = Pattern.compile("[a-z0-9!#$%&'*+/=?^_`{|}~-]+(?:.[a-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?", Pattern.CASE_INSENSITIVE);
+        return EMAIL_REGEX.matcher(email).matches();
+    }
 
     @GetMapping(path = "/", produces = "application/json")
     public List<ClientEntity> getAllClient() {
@@ -37,9 +43,14 @@ public class ClientApiController {
     @PostMapping(path = "/", produces = "application/json")
     public ResponseEntity<ClientEntity> addClient(@RequestBody ClientEntity client) {
         try {
-            ClientEntity createClient = cs.addPatient(client.getNomComplet(), client.getTelephone(), client.getEmail(), client.getAdresse());
-            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createClient.getId()).toUri();
-            return ResponseEntity.created(uri).body(createClient);
+            if (isEmailValid(client.getEmail())) {
+                ClientEntity createClient = cs.addPatient(client.getNomComplet(), client.getTelephone(), client.getEmail(), client.getAdresse());
+                URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createClient.getId()).toUri();
+                return ResponseEntity.created(uri).body(createClient);
+            } else {
+                throw new Exception("Email non Valide !!");
+            }
+
         } catch (Exception e) {
             System.out.println("Erreur : " + e);
             throw new ResponseStatusException( HttpStatus.BAD_REQUEST , e.getMessage() );
@@ -49,9 +60,14 @@ public class ClientApiController {
     @PutMapping(path = "/update/{id}", produces = "application/json")
     public ResponseEntity<ClientEntity> updateClient(@PathVariable(name = "id") int id, @RequestBody ClientEntity client) {
         try {
-            ClientEntity updateClient = cs.updadeClient(id, client.getNomComplet(), client.getTelephone(), client.getEmail(), client.getAdresse());
-            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(updateClient).toUri();
-            return ResponseEntity.created(uri).body(updateClient);
+            if (isEmailValid(client.getEmail())) {
+                ClientEntity updateClient = cs.updadeClient(id, client.getNomComplet(), client.getTelephone(), client.getEmail(), client.getAdresse());
+                URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(updateClient).toUri();
+                return ResponseEntity.created(uri).body(updateClient);
+            } else {
+                throw new Exception("Email non Valide !!");
+            }
+
         } catch (Exception e) {
             System.out.println("Erreur : " + e);
             throw new ResponseStatusException( HttpStatus.BAD_REQUEST , e.getMessage() );

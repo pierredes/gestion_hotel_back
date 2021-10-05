@@ -41,9 +41,14 @@ public class ReservationApiController {
         String dateDebutToString = formatterDate.format(reservation.getDateDebut());
         String dateFinToString = formatterDate.format(reservation.getDateFin());
         try {
-            ReservationEntity createReservation = rs.addReservation(dateDebutToString, dateFinToString, reservation.getNumeroChambre(),reservation.getClient().getId(), reservation.getHotel().getId());
-            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createReservation.getId()).toUri();
-            return ResponseEntity.created(uri).body(createReservation);
+            if (dateDebutToString.compareTo(dateFinToString) < 0) {
+                ReservationEntity createReservation = rs.addReservation(dateDebutToString, dateFinToString, reservation.getNumeroChambre(),reservation.getClient().getId(), reservation.getHotel().getId());
+                URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createReservation.getId()).toUri();
+                return ResponseEntity.created(uri).body(createReservation);
+            } else {
+                throw new Exception("votre date de départ est avant celle d'arrivé");
+            }
+
         } catch (Exception e) {
             System.out.println("Erreur : " + e);
             throw new ResponseStatusException( HttpStatus.BAD_REQUEST , e.getMessage() );
@@ -56,9 +61,14 @@ public class ReservationApiController {
         String dateDebutToString = formatterDate.format(reservation.getDateDebut());
         String dateFinToString = formatterDate.format(reservation.getDateFin());
         try {
-            ReservationEntity updateReservation = rs.updateReservation(id, dateDebutToString, dateFinToString, reservation.getNumeroChambre(),reservation.getClient().getId(), reservation.getHotel().getId());
-            URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(updateReservation).toUri();
-            return ResponseEntity.created(uri).body(updateReservation);
+            if (dateDebutToString.compareTo(dateFinToString) < 0) {
+                ReservationEntity updateReservation = rs.updateReservation(id, dateDebutToString, dateFinToString, reservation.getNumeroChambre(), reservation.getClient().getId(), reservation.getHotel().getId());
+                URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(updateReservation).toUri();
+                return ResponseEntity.created(uri).body(updateReservation);
+            } else {
+                throw new Exception("votre date de départ est avant celle d'arrivé");
+            }
+
         } catch (Exception e) {
             System.out.println("Erreur : " + e);
             throw new ResponseStatusException( HttpStatus.BAD_REQUEST , e.getMessage() );
