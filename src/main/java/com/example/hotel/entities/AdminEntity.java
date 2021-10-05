@@ -32,7 +32,7 @@ public class AdminEntity {
 
     @Basic
     @Column(name = "password")
-    public String GetPassword() {
+    public String getPassword() {
         return password;
     }
 
