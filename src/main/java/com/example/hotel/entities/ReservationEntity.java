@@ -15,9 +15,9 @@ public class ReservationEntity {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm")
     private Date dateFin;
     private int numeroChambre;
-
     private ClientEntity client;
     private HotelEntity hotel;
+
     @Id
     @Column(name = "id")
     public int getId() {
