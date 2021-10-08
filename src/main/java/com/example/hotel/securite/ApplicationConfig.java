@@ -22,7 +22,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 public class ApplicationConfig  extends WebSecurityConfigurerAdapter {
 
     @Autowired
-    private UserDetailsService userDetailsService;
+    private AdminDetailsServiceImpl userDetailsService;
 
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {

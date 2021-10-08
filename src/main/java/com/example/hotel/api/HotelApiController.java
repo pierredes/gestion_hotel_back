@@ -5,12 +5,17 @@ import com.example.hotel.service.HotelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @RestController
@@ -41,15 +46,13 @@ public class HotelApiController {
     }
 
     @PostMapping(path = "/", produces = "application/json")
-    public ResponseEntity<HotelEntity> addHotel(@RequestBody HotelEntity hotel) {
+    public ResponseEntity<HotelEntity> addHotel(@Valid @RequestBody HotelEntity hotel) {
         try {
-            if (isEmailValid(hotel.getEmail())) {
+
                 HotelEntity createHotel = hs.addHotel(hotel.getNom(), hotel.getEtoiles(), hotel.getAdresse(), hotel.getTelephone(), hotel.getEmail(), hotel.getVille());
                 URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(createHotel.getId()).toUri();
                 return ResponseEntity.created(uri).body(createHotel);
-            } else {
-                throw new Exception("Email non Valide !!");
-            }
+
 
         } catch (Exception e) {
             System.out.println("Erreur : " + e);
@@ -58,16 +61,14 @@ public class HotelApiController {
     }
 
     @PutMapping(path = "/update/{id}", produces = "application/json")
-    public ResponseEntity<HotelEntity> updateHotel(@PathVariable(name = "id") int id, @RequestBody HotelEntity hotel) {
+    public ResponseEntity<HotelEntity> updateHotel(@PathVariable(name = "id") int id, @Valid @RequestBody HotelEntity hotel) {
 
         try {
-            if (isEmailValid(hotel.getEmail())) {
+
                 HotelEntity updateHotel = hs.updateHotel(id, hotel.getNom(), hotel.getEtoiles(), hotel.getAdresse(), hotel.getTelephone(), hotel.getEmail(), hotel.getVille());
                 URI uri = ServletUriComponentsBuilder.fromCurrentRequest().path("/{id}").buildAndExpand(updateHotel).toUri();
                 return ResponseEntity.created(uri).body(updateHotel);
-            } else {
-                throw new Exception("Email non Valide !!");
-            }
+
 
         } catch (Exception e) {
             System.out.println("Erreur : " + e);
@@ -84,5 +85,18 @@ public class HotelApiController {
             System.out.println("Erreur : " + e);
             return ResponseEntity.notFound().build();
         }
+    }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public Map<String, String> handleValidationExceptions(
+            MethodArgumentNotValidException ex) {
+        Map<String, String> errors = new HashMap<>();
+        ex.getBindingResult().getAllErrors().forEach((error) -> {
+            String fieldName = ((FieldError) error).getField();
+            String errorMessage = error.getDefaultMessage();
+            errors.put(fieldName, errorMessage);
+        });
+        return errors;
     }
 }
