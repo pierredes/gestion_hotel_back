@@ -20,8 +20,13 @@ public class ReservationService {
         this.rr = rr;
     }
 
-    public List<ReservationEntity> getAllReservation() {
-        return (List<ReservationEntity>) rr.findAll();
+    public List<ReservationEntity> getAllReservation(String search) {
+        if (search == null || search.length() == 0) {
+            return (List<ReservationEntity>) rr.findAll();
+        } else {
+            return (List<ReservationEntity>) rr.findByClientNomComplet(search);
+        }
+
     }
 
     public ReservationEntity getReservationById(int id) {

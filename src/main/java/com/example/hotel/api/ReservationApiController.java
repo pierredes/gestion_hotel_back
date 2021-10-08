@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
 import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -21,8 +22,9 @@ public class ReservationApiController {
     ReservationService rs;
 
     @GetMapping(path = "/", produces = "application/json")
-    public List<ReservationEntity> getAllReservation() {
-        return rs.getAllReservation();
+    public List<ReservationEntity> getAllReservation(HttpServletRequest request) {
+
+        return rs.getAllReservation(request.getParameter("search"));
     }
 
     @GetMapping(path = "/{id}", produces = "application/json")
