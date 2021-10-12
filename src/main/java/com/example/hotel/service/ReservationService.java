@@ -8,6 +8,7 @@ import com.example.hotel.repositories.HotelRepository;
 import com.example.hotel.repositories.ReservationRepository;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -35,10 +36,19 @@ public class ReservationService {
 
     public ReservationEntity addReservation(String dateDebut, String dateFin, int numeroChambre, int client, int hotel) {
         SimpleDateFormat formatterDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
+        SimpleDateFormat formatDateRecherche = new SimpleDateFormat("yyyy-MM-dd");
 
         try {
             Date dateDebutFormatter = formatterDate.parse(dateDebut);
             Date dateFinFormater = formatterDate.parse(dateFin);
+            Date dateDebutRecherche = formatDateRecherche.parse(dateDebut);
+            Date dateFinRecherche = formatDateRecherche.parse(dateFin);
+            List<Integer> test = rr.getAllBetweenDates(dateDebutRecherche, dateFinRecherche);
+            for (Integer i: test) {
+                if (numeroChambre == i) {
+                    throw new Exception(" numéro déjà pris");
+                }
+            }
             ReservationEntity reservation = new ReservationEntity();
             reservation.setDateDebut(dateDebutFormatter);
             reservation.setDateFin(dateFinFormater);
@@ -59,11 +69,20 @@ public class ReservationService {
 
     public ReservationEntity updateReservation(int id, String dateDebut, String dateFin, int numeroChambre, int client, int hotel) {
         SimpleDateFormat formatterDate = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm");
-
+        SimpleDateFormat formatDateRecherche = new SimpleDateFormat("yyyy-MM-dd");
         try {
             Date dateDebutFormatter = formatterDate.parse(dateDebut);
             Date dateFinFormater = formatterDate.parse(dateFin);
+            Date dateDebutRecherche = formatDateRecherche.parse(dateDebut);
+            Date dateFinRecherche = formatDateRecherche.parse(dateFin);
+            List<Integer> test = rr.getAllBetweenDates(dateDebutRecherche, dateFinRecherche);
+            for (Integer i: test) {
+                if (numeroChambre == i) {
+                    throw new Exception(" numéro déjà pris");
+                }
+            }
             ReservationEntity reservation = this.getReservationById(id);
+
             reservation.setDateDebut(dateDebutFormatter);
             reservation.setDateFin(dateFinFormater);
             reservation.setNumeroChambre(numeroChambre);

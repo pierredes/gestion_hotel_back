@@ -3,8 +3,11 @@ package com.example.hotel.entities;
 import java.util.Date;
 
 import javax.persistence.*;
+import javax.validation.constraints.Digits;
+import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import org.hibernate.annotations.CreationTimestamp;
 
 @Entity
 @Table(name = "reservation", schema = "agence_voyage", catalog = "")

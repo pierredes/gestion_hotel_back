@@ -49,7 +49,7 @@ public class HotelEntity {
 
     @Basic
     @Column(name = "adresse")
-    @NotBlank(message = "nom obligatoire")
+    @NotBlank(message = "adresse obligatoire")
     public String getAdresse() {
         return adresse;
     }
@@ -60,7 +60,7 @@ public class HotelEntity {
 
     @Basic
     @Column(name = "telephone")
-    @NotBlank(message = "nom obligatoire")
+    @NotBlank(message = "téléphone obligatoire")
     public String getTelephone() {
         return telephone;
     }
@@ -71,8 +71,8 @@ public class HotelEntity {
 
     @Basic
     @Column(name = "email")
-    @NotBlank(message = "nom obligatoire")
-    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@" + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$")
+    @NotBlank(message = "email obligatoire")
+    @Pattern(regexp = "^(?=.{1,64}@)[A-Za-z0-9_-]+(\\.[A-Za-z0-9_-]+)*@" + "[^-][A-Za-z0-9-]+(\\.[A-Za-z0-9-]+)*(\\.[A-Za-z]{2,})$", message = "l'adresse mail est inccorect")
     public String getEmail() {
         return email;
     }
@@ -83,7 +83,7 @@ public class HotelEntity {
 
     @Basic
     @Column(name = "ville")
-    @NotBlank(message = "nom obligatoire")
+    @NotBlank(message = "ville obligatoire")
     public String getVille() {
         return ville;
     }
